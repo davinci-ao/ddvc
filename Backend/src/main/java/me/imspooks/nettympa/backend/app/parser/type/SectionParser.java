@@ -17,7 +17,8 @@ public class SectionParser implements Parser<Collection<Section>> {
     @Override
     public String parse(String layout, Collection<Section> sections) throws IOException {
         for (Section section : sections) {
-            layout = layout.replace(section.getName(), section.parse());
+            String match = "@section(\"" + section.getName() + "\")";
+            layout = layout.replace(match, section.parse());
         }
 
 /*        Pattern pattern = Pattern.compile("@section\\(\"([^]]+?)\"\\)", Pattern.MULTILINE);

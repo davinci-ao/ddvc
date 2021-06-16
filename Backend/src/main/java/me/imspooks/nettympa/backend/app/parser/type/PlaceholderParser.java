@@ -18,7 +18,7 @@ public class PlaceholderParser implements Parser<Map<String, Object>> {
     @Override
     public String parse(String view, Map<String, Object> placeholders) throws IOException {
         for (Map.Entry<String, Object> entry : placeholders.entrySet()) {
-            String match = "@placeholder(" + entry.getValue() + ")";
+            String match = "@placeholder(\"" + entry.getValue() + "\")";
 
             Object toReplace;
 

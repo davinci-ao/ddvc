@@ -20,7 +20,7 @@ public class ComponentsParser implements Parser<Map<String, List<Component>>> {
     @Override
     public String parse(String view, Map<String, List<Component>> components) throws IOException {
         for (Map.Entry<String, List<Component>> entry : components.entrySet()) {
-            String match = "@component(" + entry.getValue() + ")";
+            String match = "@component(\"" + entry.getValue() + "\")";
 
             StringBuilder builder = new StringBuilder();
 
