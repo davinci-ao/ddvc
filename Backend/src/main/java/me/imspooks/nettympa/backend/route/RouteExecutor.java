@@ -48,6 +48,11 @@ public class RouteExecutor {
             for (Method method : controller.getClass().getMethods()) {
                 if (method.getName().equals(this.destination.getMethod())) {
 
+                    Response middlewareResponse = controller.runMiddleware(this.destination.getMethod(), request, session);
+                    if (middlewareResponse != null) {
+                        return middlewareResponse;
+                    }
+
                     List<Object> params = new ArrayList<>();
                     for (Class<?> parameterType : method.getParameterTypes()) {
                         if (parameterType == Request.class) params.add(request);

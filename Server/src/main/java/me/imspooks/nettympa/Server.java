@@ -20,6 +20,7 @@ public class Server {
         RouteManager.get("store", TestController.class, "store");
         RouteManager.get("get", TestController.class, "get");
         RouteManager.get("redirect", TestController.class, "redirect");
+        RouteManager.get("user/{username}", TestController.class, "wildcardTest");
 
         try {
             SessionManager.setEnabled(true);

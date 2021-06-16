@@ -2,6 +2,7 @@ package me.imspooks.nettympa.controller;
 
 import me.imspooks.nettympa.backend.app.controller.Controller;
 import me.imspooks.nettympa.backend.app.layout.Layout;
+import me.imspooks.nettympa.backend.app.middleware.Middleware;
 import me.imspooks.nettympa.backend.app.request.Request;
 import me.imspooks.nettympa.backend.app.response.Response;
 import me.imspooks.nettympa.backend.app.response.ResponseType;
@@ -22,6 +23,15 @@ import java.util.Map;
  * Copyright © ImSpooks
  */
 public class TestController extends Controller {
+
+    public TestController() {
+        this.addMiddleware(new Middleware("test", (request, session) -> {
+            if (!session.containsKey("user")) {
+                return new RedirectResponse("/login");
+            }
+            return null;
+        }));
+    }
 
     public Response test(Session session) throws IOException {
         Layout layout = () -> FileManager.getFromView("layout/layout.html");
@@ -46,6 +56,10 @@ public class TestController extends Controller {
 
     public Response redirect(Request request, Session session, Map<String, String> wildcard) {
         return new RedirectResponse("https://www.google.com");
+    }
+
+    public Response wildcardTest(Request request, Session session, Map<String, String> wildcard) {
+        return new RawResponse(ResponseType.JSON, Global.GSON.toJson(wildcard));
     }
 
 }
