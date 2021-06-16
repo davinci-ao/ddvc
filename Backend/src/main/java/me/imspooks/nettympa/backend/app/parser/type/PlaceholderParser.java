@@ -5,6 +5,7 @@ import me.imspooks.nettympa.backend.app.section.Section;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +17,23 @@ public class PlaceholderParser implements Parser<Map<String, Object>> {
 
     @Override
     public String parse(String view, Map<String, Object> placeholders) throws IOException {
-        Pattern pattern = Pattern.compile("@placeholder\\(\"([^]]+?)\"\\)", Pattern.MULTILINE);
+        for (Map.Entry<String, Object> entry : placeholders.entrySet()) {
+            String match = "@placeholder(" + entry.getValue() + ")";
+
+            Object toReplace;
+
+            if (entry.getValue() instanceof Section) {
+                toReplace = ((Section) entry.getValue()).parse();
+            } else if (entry.getValue() instanceof Supplier<?>) {
+                toReplace = ((Supplier<?>) entry.getValue()).get();
+            } else {
+                toReplace = entry.getValue().toString();
+            }
+
+            view = view.replace(match, toReplace.toString());
+        }
+
+        /*Pattern pattern = Pattern.compile("@placeholder\\(\"([^]]+?)\"\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(view);
 
         // find all sections
@@ -26,11 +43,19 @@ public class PlaceholderParser implements Parser<Map<String, Object>> {
 
             for (Map.Entry<String, Object> entry : placeholders.entrySet()) {
                 if (entry.getKey().equals(target)) {
+                    Object toReplace;
+
+                    if (entry.getValue() instanceof Section) {
+                        toReplace = ((Section) entry.getValue()).parse();
+                    } else if (entry.getValue() instanceof Supplier<?>) {
+
+                    }
+
                     view = view.replace(match, entry.getValue() instanceof Section ? ((Section) entry.getValue()).parse() : entry.getValue().toString());
                 }
             }
             view = view.replace(match, "");
-        }
+        }*/
 
         return view;
     }

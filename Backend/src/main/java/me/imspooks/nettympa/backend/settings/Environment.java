@@ -27,11 +27,20 @@ public class Environment implements Settings {
 
 
     public String getValue(String key) {
-        for (Field declaredField : this.getClass().getDeclaredFields()) {
+        return this.getValue(this, key);
+    }
+
+    private String getValue(Object instance, String key) {
+        for (Field declaredField : instance.getClass().getDeclaredFields()) {
             if (declaredField.getName().equalsIgnoreCase(key)) {
                 declaredField.setAccessible(true);
                 try {
-                    return declaredField.get(this).toString();
+                    Object value = declaredField.get(instance);
+                    if (value instanceof Settings) {
+                        return this.getValue(value, key);
+                    }
+
+                    return value.toString();
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }

@@ -16,7 +16,11 @@ public class SectionParser implements Parser<Collection<Section>> {
 
     @Override
     public String parse(String layout, Collection<Section> sections) throws IOException {
-        Pattern pattern = Pattern.compile("@section\\(\"([^]]+?)\"\\)", Pattern.MULTILINE);
+        for (Section section : sections) {
+            layout = layout.replace(section.getName(), section.parse());
+        }
+
+/*        Pattern pattern = Pattern.compile("@section\\(\"([^]]+?)\"\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(layout);
 
         // find all sections
@@ -30,7 +34,7 @@ public class SectionParser implements Parser<Collection<Section>> {
                 }
             }
             layout = layout.replace(match, "");
-        }
+        }*/
 
         return layout;
     }
