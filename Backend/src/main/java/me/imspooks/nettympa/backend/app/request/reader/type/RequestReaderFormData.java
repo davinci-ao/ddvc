@@ -1,5 +1,6 @@
 package me.imspooks.nettympa.backend.app.request.reader.type;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -54,7 +55,22 @@ public class RequestReaderFormData implements RequestReader {
                     // its not a file
                     response = ContentType.TEXT.getFunction().apply(splitted);
                 }
-                object.add(matcher.group(1), response);
+
+                String key = matcher.group(1);
+
+                if (object.has(key)) {
+                    JsonArray array;
+                    if (object.get(key).isJsonArray()) {
+                        array = object.get(key).getAsJsonArray();
+                    } else {
+                        (array = new JsonArray()).add(object.get(key));
+                    }
+                    array.add(response);
+
+                    object.add(key, array);
+                } else {
+                    object.add(key, response);
+                }
             }
         }
         return new JsonRequest(object);

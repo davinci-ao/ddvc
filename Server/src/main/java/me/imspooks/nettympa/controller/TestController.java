@@ -1,65 +1,54 @@
 package me.imspooks.nettympa.controller;
 
-import me.imspooks.nettympa.backend.app.controller.Controller;
-import me.imspooks.nettympa.backend.app.layout.Layout;
 import me.imspooks.nettympa.backend.app.middleware.Middleware;
 import me.imspooks.nettympa.backend.app.request.Request;
+import me.imspooks.nettympa.backend.app.request.validator.ValidationError;
 import me.imspooks.nettympa.backend.app.response.Response;
 import me.imspooks.nettympa.backend.app.response.ResponseType;
 import me.imspooks.nettympa.backend.app.response.type.RawResponse;
 import me.imspooks.nettympa.backend.app.response.type.RedirectResponse;
-import me.imspooks.nettympa.backend.app.response.type.ViewResponse;
 import me.imspooks.nettympa.backend.app.section.type.FileSection;
 import me.imspooks.nettympa.backend.app.session.Session;
-import me.imspooks.nettympa.backend.app.view.type.SectionedView;
 import me.imspooks.nettympa.backend.files.FileManager;
 import me.imspooks.nettympa.backend.global.Global;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Nick on 28 Jun 2020.
  * Copyright © ImSpooks
  */
-public class TestController extends Controller {
+public class TestController extends BaseController {
 
     public TestController() {
         this.addMiddleware(new Middleware("test", (request, session) -> {
             if (!session.containsKey("user")) {
-                return new RedirectResponse("/login");
+//                return new RedirectResponse("/login");
             }
             return null;
         }));
     }
 
     public Response test(Session session) throws IOException {
-        Layout layout = () -> FileManager.getFromView("layout/layout.html");
-
-        SectionedView view = new SectionedView(layout);
-
-        FileSection fileSection = new FileSection("header", FileManager.getFromView("section/header.html"));
-
-        view.registerSection(fileSection);
-
-        return new ViewResponse(view, session);
+        return this.getPage(session);
     }
 
-    public Response store(Request request, Session session, Map<String, String> wildcard) {
-        session.put("testVariable", Global.RANDOM.nextInt(100));
-        return new RawResponse(ResponseType.JSON, Global.GSON.toJson(session));
+    public Response validationTest(Request request, Session session, Map<String, ValidationError> previousErrors) throws IOException {
+        System.out.println("previousErrors = " + previousErrors);
+
+        FileSection section = new FileSection("content", FileManager.getFromView("section/test/validation-test.html"));
+        if (previousErrors != null && previousErrors.size() > 0) {
+            section.setValidationErrors(previousErrors);
+        }
+
+        return this.getPage(session, section);
     }
 
-    public Response get(Request request, Session session, Map<String, String> wildcard) {
-        return new RawResponse(ResponseType.JSON, Global.GSON.toJson(session));
-    }
+    public Response validationTestExecute(Request request, Session session) throws IOException {
 
-    public Response redirect(Request request, Session session, Map<String, String> wildcard) {
-        return new RedirectResponse("https://www.google.com");
-    }
-
-    public Response wildcardTest(Request request, Session session, Map<String, String> wildcard) {
-        return new RawResponse(ResponseType.JSON, Global.GSON.toJson(wildcard));
+        return this.getPage(session);
     }
 
 }
