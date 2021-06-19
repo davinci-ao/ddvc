@@ -1,6 +1,7 @@
 package me.imspooks.nettympa.backend.route;
 
 import com.google.gson.reflect.TypeToken;
+import me.imspooks.nettympa.backend.app.Wildcard;
 import me.imspooks.nettympa.backend.app.controller.Controller;
 import me.imspooks.nettympa.backend.app.request.Request;
 import me.imspooks.nettympa.backend.app.response.Response;
@@ -14,6 +15,7 @@ import me.imspooks.nettympa.backend.global.Global;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +27,9 @@ import java.util.Map;
 public class RouteExecutor {
 
     private final RouteDestination destination;
-    private final Map<String, String> wildcards;
+    private final Wildcard wildcards;
 
-    public RouteExecutor(RouteDestination destination, Map<String, String> wildcards) {
+    public RouteExecutor(RouteDestination destination, Wildcard wildcards) {
         this.destination = destination;
         this.wildcards = wildcards;
     }
@@ -42,8 +44,6 @@ public class RouteExecutor {
             return new RawResponse(ResponseType.JSON, Global.GSON.toJson(Global.createFromError(new AssertionError("Controller is null"))).getBytes());
         }
 
-        Class<?> wildcardType = new TypeToken<Map<String, String>>(){}.getRawType();
-
         try {
             for (Method method : controller.getClass().getMethods()) {
                 if (method.getName().equals(this.destination.getMethod())) {
@@ -56,8 +56,9 @@ public class RouteExecutor {
                     List<Object> params = new ArrayList<>();
                     for (Class<?> parameterType : method.getParameterTypes()) {
                         if (parameterType == Request.class) params.add(request);
-                        if (parameterType == Session.class) params.add(session);
-                        if (parameterType == wildcardType) params.add(this.wildcards);
+                        else if (parameterType == Session.class) params.add(session);
+                        else if (parameterType == Wildcard.class) params.add(this.wildcards);
+                        else params.add(null);
                     }
 
                     Object response = method.invoke(controller, params.toArray(new Object[0]));

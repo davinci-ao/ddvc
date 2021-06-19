@@ -1,5 +1,7 @@
 package me.imspooks.nettympa.backend.app.request;
 
+import com.google.gson.JsonElement;
+
 import java.util.Map;
 
 /**
@@ -14,7 +16,7 @@ public interface Request {
      * @param key Target key
      * @return Object bound to key
      */
-    Object get(String key);
+    JsonElement get(String key);
 
     /**
      * Merge the current request with another request
@@ -28,5 +30,5 @@ public interface Request {
     /**
      * @return All stored values in the request
      */
-    Map<String, Object> getValues();
+    Map<String, JsonElement> getValues();
 }

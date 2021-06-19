@@ -13,8 +13,7 @@ import me.imspooks.nettympa.backend.util.ObjectBuilder;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -23,6 +22,7 @@ import java.util.function.Consumer;
  */
 public class SectionedView implements View {
 
+    private final Set<Section> sections = new HashSet<>();
     private final Layout layout;
 
     public SectionedView(Layout layout) {
@@ -37,9 +37,6 @@ public class SectionedView implements View {
     public Layout getLayout() {
         return layout;
     }
-
-
-    private final Set<Section> sections = new HashSet<>();
 
     /**
      * @param section Register a section
@@ -84,7 +81,7 @@ public class SectionedView implements View {
             // TODO
             return layout.getBytes();
         } else {
-            builder.append("Jebaited");
+            builder.append("Layout doesnt exist");
         }
 
         return builder.toString().getBytes(StandardCharsets.UTF_8);

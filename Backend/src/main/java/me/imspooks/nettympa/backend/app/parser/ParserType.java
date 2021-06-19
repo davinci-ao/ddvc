@@ -12,6 +12,7 @@ public enum ParserType {
     VARIABLES(new VariableParser()),
     COMPONENTS(new ComponentsParser()),
     ENVIRONMENT(new EnvironmentParser()),
+    ERROR(new ErrorParser()),
     ;
 
     private final Parser<?> parser;

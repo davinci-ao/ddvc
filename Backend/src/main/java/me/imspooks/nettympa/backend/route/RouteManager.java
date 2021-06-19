@@ -1,6 +1,7 @@
 package me.imspooks.nettympa.backend.route;
 
 import io.netty.handler.codec.http.HttpMethod;
+import me.imspooks.nettympa.backend.app.Wildcard;
 import me.imspooks.nettympa.backend.app.controller.Controller;
 
 import java.util.*;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 public class RouteManager {
 
     private static boolean CASE_SENSITIVE;
+    private static Wildcard EMPTY_WILDCARD = new Wildcard();
 
     public static void setCaseSensitive(boolean caseSensitive) {
         CASE_SENSITIVE = caseSensitive;
@@ -179,7 +181,7 @@ public class RouteManager {
      * @return Destination
      */
     public static RouteExecutor getRoute(RouteIncoming incoming) {
-        return new RouteExecutor(ROUTES.get(incoming), Collections.emptyMap());
+        return new RouteExecutor(ROUTES.get(incoming), EMPTY_WILDCARD);
     }
 
     /**
@@ -214,7 +216,7 @@ public class RouteManager {
                 }
             }
 
-            Map<String, String> wildcards = new LinkedHashMap<>();
+            Wildcard wildcards = new Wildcard();
 
             StringBuilder finalUrl = new StringBuilder();
             

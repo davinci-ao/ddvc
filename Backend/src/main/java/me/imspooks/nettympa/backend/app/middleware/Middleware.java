@@ -12,13 +12,22 @@ import java.util.function.BiFunction;
  * Created by Nick on 16 jun. 2021.
  * Copyright © ImSpooks
  */
-@RequiredArgsConstructor
+// TODO documentation
 public class Middleware {
 
-    @Getter private final String method;
-    @Getter private final BiFunction<Request, Session, Response> check;
+    private final String method;
+    private final BiFunction<Request, Session, Response> check;
+
+    public Middleware(String method, BiFunction<Request, Session, Response> check) {
+        this.method = method;
+        this.check = check;
+    }
 
     public Response check(Request request, Session session) {
         return this.check.apply(request, session);
+    }
+
+    public String getMethod() {
+        return method;
     }
 }

@@ -2,6 +2,7 @@ package me.imspooks.nettympa.backend.app.section.type;
 
 import lombok.Getter;
 import me.imspooks.nettympa.backend.app.parser.ParserType;
+import me.imspooks.nettympa.backend.app.request.validator.error.ValidationCollection;
 import me.imspooks.nettympa.backend.app.section.Section;
 import me.imspooks.nettympa.backend.app.section.component.Component;
 import me.imspooks.nettympa.backend.app.session.Session;
@@ -31,6 +32,7 @@ public class FileSection implements Section {
     private final Map<String, Object> placeholders = new HashMap<>();
     private final Map<String, Object> variables = new HashMap<>();
     private final Map<String,  List<Component>> components = new HashMap<>();
+    private ValidationCollection validationErrors = new ValidationCollection();
 
     public FileSection(String name, Path path) {
         this.name = name;
@@ -96,6 +98,20 @@ public class FileSection implements Section {
         this.components.get(key).add(component);
     }
 
+    /**
+     * @return Get all the validation errors
+     */
+    public ValidationCollection getValidationErrors() {
+        return validationErrors;
+    }
+
+    /**
+     * Set the validation errors
+     */
+    public void setValidationErrors(ValidationCollection validationErrors) {
+        this.validationErrors = validationErrors;
+    }
+
     public String parse() throws IOException {
         if (!Files.exists(this.path)) {
             return "<i style:\"color: #FF0000;\">Section file \"" + this.path.getFileName() + "\" does not exist.</i>";
@@ -106,6 +122,7 @@ public class FileSection implements Section {
         view = ParserType.PLACEHOLDER.getParser().parseInput(view, this.getPlaceholders());
         view = ParserType.VARIABLES.getParser().parseInput(view, this.getVariables());
         view = ParserType.COMPONENTS.getParser().parseInput(view, this.getComponents());
+        view = ParserType.ERROR.getParser().parseInput(view, this.getValidationErrors());
 
         { // Variables
 

@@ -1,0 +1,32 @@
+<form action="/validation-test" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="exampleFormControlInput1">Email address</label>
+        <input name="exampleFormControlInput1" type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" value="@oldval("exampleFormControlInput1")">
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Example select</label>
+        <select name="exampleFormControlSelect1" class="form-control" id="exampleFormControlSelect1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlSelect2">Example multiple select</label>
+        <select name="exampleFormControlSelect2" multiple class="form-control" id="exampleFormControlSelect2">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">Example textarea <span style="color: red;">@errormsg("exampleFormControlTextarea1")</span></label>
+        <textarea name="exampleFormControlTextarea1" class="form-control" id="exampleFormControlTextarea1" rows="3">@oldval("exampleFormControlTextarea1")</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

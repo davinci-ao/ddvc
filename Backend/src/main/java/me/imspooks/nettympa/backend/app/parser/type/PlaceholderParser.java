@@ -17,23 +17,7 @@ public class PlaceholderParser implements Parser<Map<String, Object>> {
 
     @Override
     public String parse(String view, Map<String, Object> placeholders) throws IOException {
-        for (Map.Entry<String, Object> entry : placeholders.entrySet()) {
-            String match = "@placeholder(\"" + entry.getValue() + "\")";
-
-            Object toReplace;
-
-            if (entry.getValue() instanceof Section) {
-                toReplace = ((Section) entry.getValue()).parse();
-            } else if (entry.getValue() instanceof Supplier<?>) {
-                toReplace = ((Supplier<?>) entry.getValue()).get();
-            } else {
-                toReplace = entry.getValue().toString();
-            }
-
-            view = view.replace(match, toReplace.toString());
-        }
-
-        /*Pattern pattern = Pattern.compile("@placeholder\\(\"([^]]+?)\"\\)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile("@placeholder\\(\"([^]]+?)\"\\)", Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(view);
 
         // find all sections
@@ -48,13 +32,31 @@ public class PlaceholderParser implements Parser<Map<String, Object>> {
                     if (entry.getValue() instanceof Section) {
                         toReplace = ((Section) entry.getValue()).parse();
                     } else if (entry.getValue() instanceof Supplier<?>) {
-
+                        toReplace = ((Supplier<?>) entry.getValue()).get();
+                    } else {
+                        toReplace = entry.getValue();
                     }
 
-                    view = view.replace(match, entry.getValue() instanceof Section ? ((Section) entry.getValue()).parse() : entry.getValue().toString());
+                    view = view.replace(match, toReplace.toString());
                 }
             }
             view = view.replace(match, "");
+        }
+
+/*        for (Map.Entry<String, Object> entry : placeholders.entrySet()) {
+            String match = "@placeholder(\"" + entry.getValue() + "\")";
+
+            Object toReplace;
+
+            if (entry.getValue() instanceof Section) {
+                toReplace = ((Section) entry.getValue()).parse();
+            } else if (entry.getValue() instanceof Supplier<?>) {
+                toReplace = ((Supplier<?>) entry.getValue()).get();
+            } else {
+                toReplace = entry.getValue().toString();
+            }
+
+            view = view.replace(match, toReplace.toString());
         }*/
 
         return view;

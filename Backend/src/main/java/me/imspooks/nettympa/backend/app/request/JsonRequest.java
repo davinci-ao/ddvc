@@ -33,8 +33,8 @@ public class JsonRequest implements Request {
     }
 
     @Override
-    public Map<String, Object> getValues() {
-        Map<String, Object> map = new HashMap<>();
+    public Map<String, JsonElement> getValues() {
+        Map<String, JsonElement> map = new HashMap<>();
         for (Map.Entry<String, JsonElement> entry : this.object.entrySet()) {
             map.put(entry.getKey(), entry.getValue());
         }
