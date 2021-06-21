@@ -13,7 +13,7 @@ public class User {
 
     private final String email;
     private final String username;
-    private long timeoutAfter = System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1);
+    private transient long timeoutAfter = System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1);
 
     public void update() {
         this.timeoutAfter = System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1);

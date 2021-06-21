@@ -1,6 +1,5 @@
 package me.imspooks.nettympa.backend.app.controller;
 
-import lombok.Data;
 import me.imspooks.nettympa.backend.app.middleware.Middleware;
 import me.imspooks.nettympa.backend.app.request.Request;
 import me.imspooks.nettympa.backend.app.response.Response;
@@ -20,7 +19,7 @@ public class Controller {
 
     public Response runMiddleware(String method, Request request, Session session) {
         for (Middleware middleware : middlewareList) {
-            if (middleware.getMethod().equalsIgnoreCase(method)) {
+            if (middleware.getMethod() == null || middleware.getMethod().length() == 0 || middleware.getMethod().equalsIgnoreCase(method)) {
                 Response response = middleware.check(request, session);
                 if (response != null) {
                     return response;

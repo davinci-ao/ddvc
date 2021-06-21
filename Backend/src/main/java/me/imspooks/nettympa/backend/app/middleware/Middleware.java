@@ -1,7 +1,5 @@
 package me.imspooks.nettympa.backend.app.middleware;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import me.imspooks.nettympa.backend.app.request.Request;
 import me.imspooks.nettympa.backend.app.response.Response;
 import me.imspooks.nettympa.backend.app.session.Session;
@@ -22,6 +20,12 @@ public class Middleware {
         this.method = method;
         this.check = check;
     }
+
+    public Middleware(BiFunction<Request, Session, Response> check) {
+        this("", null);
+    }
+
+
 
     public Response check(Request request, Session session) {
         return this.check.apply(request, session);
